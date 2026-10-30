@@ -4,7 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-clients";
+import { authClient } from "@/lib/auth-client";
 
 export default function SignInForm({
     registered = false,
@@ -52,20 +52,27 @@ export default function SignInForm({
         }
     }
 
-    async function handleSocialSignIn(provider: "google" | "github") {
-        setError("");
+async function handleSocialSignIn(provider: "google" | "github") {
+  setError("");
 
-        try {
-            await authClient.signIn.social({
-                provider,
-                callbackURL: "/",
-            });
-        } catch {
-            const message = `${provider} দিয়ে সাইন ইন করা যায়নি।`;
-            setError(message);
-            toast.error(message);
-        }
+  try {
+    const { error: socialError } = await authClient.signIn.social({
+      provider,
+      callbackURL: "/",
+    });
+
+    if (socialError) {
+      const message =
+        socialError.message ?? `${provider} দিয়ে সাইন ইন করা যায়নি।`;
+      setError(message);
+      toast.error(message);
     }
+  } catch {
+    const message = `${provider} দিয়ে সাইন ইন করা যায়নি।`;
+    setError(message);
+    toast.error(message);
+  }
+}
 
     return (
         <section className="mx-auto w-full max-w-md px-4 py-8">
