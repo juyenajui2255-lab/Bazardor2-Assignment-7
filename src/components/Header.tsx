@@ -4,7 +4,7 @@ import type { Product } from "@/lib/products";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { authClient } from "@/lib/auth-clients";
+import { authClient } from "@/lib/auth-client";
 
 type HeaderProps = {
   products: Product[];
